@@ -82,6 +82,9 @@ button { font: inherit; }
 .hud-row { display: flex; align-items: baseline; justify-content: space-between; }
 .hud-row span { color: var(--muted); font-size: .67rem; letter-spacing: .08em; }
 .hud-row span em { margin-left: 5px; color: var(--cyan); font-style: normal; }
+.hud-card--goal .hud-row { align-items: center; }
+.hud-card--goal .hud-row > span { display: grid; line-height: 1.2; }
+.hud-card--goal .hud-row em { margin-left: 0; }
 .hud-row strong { font-size: .82rem; }
 .progress { height: 7px; margin-top: 8px; overflow: hidden; border-radius: 10px; background: rgba(255,255,255,.08); }
 .progress span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--violet), var(--pink)); transition: width .12s linear; }
@@ -147,6 +150,8 @@ button { font: inherit; }
 .difficulty-options strong { font-size: .73rem; }
 .difficulty-options small { color: var(--muted); font: 500 .58rem/1 "IBM Plex Mono", monospace; }
 .difficulty-picker--result { margin-top: -6px; }
+.density-control { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; color: var(--muted); font-size: .73rem; }
+.density-control select { min-width: 100px; min-height: 40px; padding: 6px 10px; border: 1px solid var(--cyan); border-radius: 7px; color: var(--cyan); background: var(--panel); font: inherit; cursor: pointer; }
 .howto { display: flex; justify-content: center; gap: 12px; margin-bottom: 22px; }
 .howto div { display: grid; gap: 6px; }
 .howto kbd { min-width: 116px; padding: 10px 12px; border: 1px solid rgba(255,255,255,.16); border-bottom-width: 3px; border-radius: 7px; background: rgba(255,255,255,.06); font: 600 .77rem/1 "IBM Plex Mono", monospace; }

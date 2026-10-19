@@ -27,7 +27,7 @@
           <strong id="timeValue">45.0</strong>
         </div>
         <div class="hud-card hud-card--goal">
-          <div class="hud-row"><span>目的地まで <em id="crowdValue">混雑・156人</em></span><strong id="distanceValue">85m</strong></div>
+          <div class="hud-row"><span>目的地まで <em id="crowdValue">混雑・312人（2倍）</em></span><strong id="distanceValue">85m</strong></div>
           <div class="progress"><span id="progressBar"></span></div>
         </div>
         <div class="hud-card hud-card--stamina">
@@ -48,10 +48,18 @@
             <div class="difficulty-picker" aria-label="混雑度を選択">
               <span>混雑度</span>
               <div class="difficulty-options">
-                <button type="button" data-difficulty="easy" aria-pressed="false"><strong>ゆったり</strong><small>48人</small></button>
-                <button type="button" data-difficulty="normal" aria-pressed="true" class="is-selected"><strong>混雑</strong><small>156人</small></button>
-                <button type="button" data-difficulty="hard" aria-pressed="false"><strong>激混み</strong><small>324人</small></button>
+                <button type="button" data-difficulty="easy" aria-pressed="false"><strong>ゆったり</strong><small>96人</small></button>
+                <button type="button" data-difficulty="normal" aria-pressed="true" class="is-selected"><strong>混雑</strong><small>312人</small></button>
+                <button type="button" data-difficulty="hard" aria-pressed="false"><strong>激混み</strong><small>648人</small></button>
               </div>
+              <label class="density-control">密度倍率
+                <select data-density>
+                  <option value="2" selected>2倍</option>
+                  <option value="3">3倍</option>
+                  <option value="4">4倍</option>
+                  <option value="5">5倍</option>
+                </select>
+              </label>
             </div>
             <div class="howto">
               <div><kbd>WASD</kbd><span>移動</span></div>
@@ -71,10 +79,18 @@
             <div class="difficulty-picker difficulty-picker--result" aria-label="次の混雑度を選択">
               <span>次の混雑度</span>
               <div class="difficulty-options">
-                <button type="button" data-difficulty="easy" aria-pressed="false"><strong>ゆったり</strong><small>48人</small></button>
-                <button type="button" data-difficulty="normal" aria-pressed="true" class="is-selected"><strong>混雑</strong><small>156人</small></button>
-                <button type="button" data-difficulty="hard" aria-pressed="false"><strong>激混み</strong><small>324人</small></button>
+                <button type="button" data-difficulty="easy" aria-pressed="false"><strong>ゆったり</strong><small>96人</small></button>
+                <button type="button" data-difficulty="normal" aria-pressed="true" class="is-selected"><strong>混雑</strong><small>312人</small></button>
+                <button type="button" data-difficulty="hard" aria-pressed="false"><strong>激混み</strong><small>648人</small></button>
               </div>
+              <label class="density-control">密度倍率
+                <select data-density>
+                  <option value="2" selected>2倍</option>
+                  <option value="3">3倍</option>
+                  <option value="4">4倍</option>
+                  <option value="5">5倍</option>
+                </select>
+              </label>
             </div>
             <button class="primary-button" id="retryButton" type="button">もう一度挑戦 <span>↻</span></button>
           </div>

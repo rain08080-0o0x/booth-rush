@@ -41,6 +41,7 @@
   let soundOn = true;
   let audioContext = null;
   let selectedDifficulty = "normal";
+  let densityMultiplier = 2;
 
   const player = {
     x: START_X,
@@ -59,7 +60,7 @@
 
   function createCrowd() {
     crowd = [];
-    const total = difficulties[selectedDifficulty].count;
+    const total = difficulties[selectedDifficulty].count * densityMultiplier;
     const columnCount = Math.ceil(Math.sqrt(total * 630 / 480));
     const columns = Array.from({ length: columnCount }, (_, index) =>
       155 + index * 630 / (columnCount - 1));
@@ -90,6 +91,19 @@
       const isSelected = button.dataset.difficulty === difficulty;
       button.classList.toggle("is-selected", isSelected);
       button.setAttribute("aria-pressed", String(isSelected));
+    });
+    createCrowd();
+    updateHud();
+  }
+
+  function setDensity(multiplier) {
+    if (![2, 3, 4, 5].includes(multiplier) || state === "playing") return;
+    densityMultiplier = multiplier;
+    document.querySelectorAll("[data-density]").forEach((select) => {
+      select.value = String(multiplier);
+    });
+    document.querySelectorAll("[data-difficulty]").forEach((button) => {
+      button.querySelector("small").textContent = `${difficulties[button.dataset.difficulty].count * multiplier}人`;
     });
     createCrowd();
     updateHud();
@@ -276,7 +290,7 @@
     ui.progress.style.width = `${progress * 100}%`;
     ui.stamina.textContent = `${Math.round(player.stamina)}%`;
     ui.staminaBar.style.width = `${player.stamina}%`;
-    ui.crowd.textContent = `${difficulty.label}・${difficulty.count}人`;
+    ui.crowd.textContent = `${difficulty.label}・${difficulty.count * densityMultiplier}人（${densityMultiplier}倍）`;
   }
 
   function roundedRect(x, y, width, height, radius) {
@@ -446,6 +460,9 @@
   document.getElementById("retryButton").addEventListener("click", startGame);
   document.querySelectorAll("[data-difficulty]").forEach((button) => {
     button.addEventListener("click", () => setDifficulty(button.dataset.difficulty));
+  });
+  document.querySelectorAll("[data-density]").forEach((select) => {
+    select.addEventListener("change", () => setDensity(Number(select.value)));
   });
   ui.sound.addEventListener("click", () => {
     soundOn = !soundOn;
