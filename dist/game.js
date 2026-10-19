@@ -25,9 +25,9 @@
   const START_X = 68;
   const GOAL_X = 820;
   const difficulties = {
-    easy: { label: "ゆったり", count: 24 },
-    normal: { label: "混雑", count: 39 },
-    hard: { label: "激混み", count: 54 }
+    easy: { label: "ゆったり", count: 48 },
+    normal: { label: "混雑", count: 156 },
+    hard: { label: "激混み", count: 324 }
   };
   const colors = ["#ff6a9f", "#6b8cff", "#f4c45c", "#63d8c6", "#aa74f7", "#f47c5b"];
   const input = { up: false, down: false, left: false, right: false, push: false };
@@ -59,18 +59,19 @@
 
   function createCrowd() {
     crowd = [];
-    const columns = [175, 255, 340, 430, 520, 610, 700, 765];
     const total = difficulties[selectedDifficulty].count;
+    const columnCount = Math.ceil(Math.sqrt(total * 630 / 480));
+    const columns = Array.from({ length: columnCount }, (_, index) =>
+      155 + index * 630 / (columnCount - 1));
     const baseCount = Math.floor(total / columns.length);
     const remainder = total % columns.length;
     columns.forEach((baseX, columnIndex) => {
       const count = baseCount + (columnIndex < remainder ? 1 : 0);
-      const spacing = HEIGHT / count;
+      const spacing = 480 / count;
       for (let row = 0; row < count; row += 1) {
         crowd.push({
-          x: baseX + random(-27, 27),
-          y: spacing * (row + 0.5) + random(-28, 28),
-          baseY: spacing * (row + 0.5),
+          x: baseX + random(-6, 6),
+          y: 44 + spacing * (row + 0.5) + random(-6, 6),
           vx: random(-5, 5),
           vy: random(18, 35) * (Math.random() > 0.5 ? 1 : -1),
           radius: random(13, 18),
@@ -102,6 +103,7 @@
     player.stamina = 100;
     player.facingX = 1;
     player.facingY = 0;
+    player.pushing = false;
     player.pushGlow = 0;
     timeLeft = ROUND_TIME;
     elapsed = 0;
@@ -184,15 +186,15 @@
       player.facingY = dy;
     }
 
-    player.pushing = input.push && player.stamina > 1 && (dx || dy);
-    const acceleration = player.pushing ? 780 : 520;
-    const maxSpeed = player.pushing ? 195 : 120;
+    player.pushing = input.push && player.stamina > 0 && Boolean(dx || dy);
+    const acceleration = 520;
+    const maxSpeed = 120;
     if (player.pushing) {
-      player.stamina = Math.max(0, player.stamina - 35 * dt);
+      player.stamina = Math.max(0, player.stamina - 100 * dt);
       player.pushGlow = Math.min(1, player.pushGlow + dt * 6);
       if (Math.random() < dt * 18) addTrail();
     } else {
-      player.stamina = Math.min(100, player.stamina + 19 * dt);
+      if (!input.push) player.stamina = Math.min(100, player.stamina + 19 * dt);
       player.pushGlow = Math.max(0, player.pushGlow - dt * 5);
     }
 
@@ -229,21 +231,16 @@
         const nx = cx / distance;
         const ny = cy / distance;
         const overlap = minimum - distance;
-        if (player.pushing) {
-          person.x += nx * overlap * 1.45;
-          person.y += ny * overlap * 1.45;
-          person.vx += nx * 30;
-          person.vy += ny * 28;
-          player.x -= nx * overlap * .08;
-          if (Math.random() < .12) beep(100 + Math.random() * 40, .035, "square", .008);
-        } else {
-          player.x -= nx * overlap * .68;
-          player.y -= ny * overlap * .68;
-          player.vx -= nx * 80;
-          player.vy -= ny * 80;
-          person.x += nx * overlap * .22;
-          shake = Math.max(shake, 2.4);
-        }
+        const personShare = player.pushing ? .35 : .22;
+        person.x += nx * overlap * personShare;
+        person.y += ny * overlap * personShare;
+        player.x -= nx * overlap * (1 - personShare);
+        player.y -= ny * overlap * (1 - personShare);
+        const inwardSpeed = Math.max(0, player.vx * nx + player.vy * ny);
+        player.vx -= nx * inwardSpeed;
+        player.vy -= ny * inwardSpeed;
+        shake = Math.max(shake, player.pushing ? 1.2 : 2.4);
+        if (player.pushing && Math.random() < .12) beep(100 + Math.random() * 40, .035, "square", .008);
       }
     });
 
