@@ -81,6 +81,7 @@ button { font: inherit; }
 .hud-card strong { font-family: "IBM Plex Mono", monospace; font-size: 1.35rem; line-height: 1.2; }
 .hud-row { display: flex; align-items: baseline; justify-content: space-between; }
 .hud-row span { color: var(--muted); font-size: .67rem; letter-spacing: .08em; }
+.hud-row span em { margin-left: 5px; color: var(--cyan); font-style: normal; }
 .hud-row strong { font-size: .82rem; }
 .progress { height: 7px; margin-top: 8px; overflow: hidden; border-radius: 10px; background: rgba(255,255,255,.08); }
 .progress span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--violet), var(--pink)); transition: width .12s linear; }
@@ -126,6 +127,26 @@ button { font: inherit; }
 .panel h2 span { color: var(--yellow); }
 .panel__copy { margin: 16px auto 20px; color: #c9c4db; font-size: .88rem; line-height: 1.85; }
 .accent { color: var(--pink); font: 600 .8rem/1 "IBM Plex Mono", monospace; }
+.difficulty-picker { margin: -4px 0 18px; text-align: left; }
+.difficulty-picker > span { display: block; margin-bottom: 7px; color: var(--muted); font: 600 .64rem/1 "IBM Plex Mono", monospace; letter-spacing: .12em; }
+.difficulty-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+.difficulty-options button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  padding: 9px 10px;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 7px;
+  color: #d9d4e8;
+  background: rgba(255,255,255,.045);
+  cursor: pointer;
+}
+.difficulty-options button:hover { border-color: rgba(81,246,224,.55); }
+.difficulty-options button.is-selected { border-color: var(--cyan); color: var(--cyan); background: rgba(81,246,224,.12); box-shadow: inset 0 0 0 1px rgba(81,246,224,.15); }
+.difficulty-options strong { font-size: .73rem; }
+.difficulty-options small { color: var(--muted); font: 500 .58rem/1 "IBM Plex Mono", monospace; }
+.difficulty-picker--result { margin-top: -6px; }
 .howto { display: flex; justify-content: center; gap: 12px; margin-bottom: 22px; }
 .howto div { display: grid; gap: 6px; }
 .howto kbd { min-width: 116px; padding: 10px 12px; border: 1px solid rgba(255,255,255,.16); border-bottom-width: 3px; border-radius: 7px; background: rgba(255,255,255,.06); font: 600 .77rem/1 "IBM Plex Mono", monospace; }
@@ -181,6 +202,9 @@ footer { justify-content: space-between; gap: 20px; padding: 16px 4px 0; color: 
   .mobile-controls { display: flex; }
   footer span:last-child { display: none; }
   .panel { padding: 22px; }
+  .overlay { overflow-y: auto; }
+  .difficulty-options button { display: grid; justify-content: center; padding: 7px 4px; text-align: center; }
+  .difficulty-options small { margin-top: 3px; }
 }
 
 @media (max-width: 480px) {
@@ -190,6 +214,7 @@ footer { justify-content: space-between; gap: 20px; padding: 16px 4px 0; color: 
   .hud-card--stamina .hud-row span::after { content: "PUSH"; font-size: .58rem; }
   .overlay { align-items: center; padding: 12px; }
   .panel__copy { font-size: .76rem; margin: 12px 0 14px; }
+  .difficulty-picker { margin-bottom: 12px; }
   .howto { margin-bottom: 16px; }
   .howto kbd { min-width: 96px; padding: 8px; }
   .panel__note { display: none; }

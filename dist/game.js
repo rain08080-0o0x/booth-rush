@@ -6,6 +6,7 @@
   const ui = {
     time: document.getElementById("timeValue"),
     distance: document.getElementById("distanceValue"),
+    crowd: document.getElementById("crowdValue"),
     progress: document.getElementById("progressBar"),
     stamina: document.getElementById("staminaValue"),
     staminaBar: document.getElementById("staminaBar"),
@@ -23,6 +24,11 @@
   const ROUND_TIME = 45;
   const START_X = 68;
   const GOAL_X = 820;
+  const difficulties = {
+    easy: { label: "ゆったり", count: 24 },
+    normal: { label: "混雑", count: 39 },
+    hard: { label: "激混み", count: 54 }
+  };
   const colors = ["#ff6a9f", "#6b8cff", "#f4c45c", "#63d8c6", "#aa74f7", "#f47c5b"];
   const input = { up: false, down: false, left: false, right: false, push: false };
   let state = "ready";
@@ -34,6 +40,7 @@
   let shake = 0;
   let soundOn = true;
   let audioContext = null;
+  let selectedDifficulty = "normal";
 
   const player = {
     x: START_X,
@@ -53,8 +60,11 @@
   function createCrowd() {
     crowd = [];
     const columns = [175, 255, 340, 430, 520, 610, 700, 765];
+    const total = difficulties[selectedDifficulty].count;
+    const baseCount = Math.floor(total / columns.length);
+    const remainder = total % columns.length;
     columns.forEach((baseX, columnIndex) => {
-      const count = columnIndex === 7 ? 4 : 5;
+      const count = baseCount + (columnIndex < remainder ? 1 : 0);
       const spacing = HEIGHT / count;
       for (let row = 0; row < count; row += 1) {
         crowd.push({
@@ -70,6 +80,18 @@
         });
       }
     });
+  }
+
+  function setDifficulty(difficulty) {
+    if (!difficulties[difficulty] || state === "playing") return;
+    selectedDifficulty = difficulty;
+    document.querySelectorAll("[data-difficulty]").forEach((button) => {
+      const isSelected = button.dataset.difficulty === difficulty;
+      button.classList.toggle("is-selected", isSelected);
+      button.setAttribute("aria-pressed", String(isSelected));
+    });
+    createCrowd();
+    updateHud();
   }
 
   function resetGame() {
@@ -250,12 +272,14 @@
 
   function updateHud() {
     const progress = Math.max(0, Math.min(1, (player.x - START_X) / (GOAL_X - START_X)));
+    const difficulty = difficulties[selectedDifficulty];
     ui.time.textContent = timeLeft.toFixed(1);
     ui.time.style.color = timeLeft < 10 ? "#ff5aa5" : "";
     ui.distance.textContent = `${Math.ceil((1 - progress) * 85)}m`;
     ui.progress.style.width = `${progress * 100}%`;
     ui.stamina.textContent = `${Math.round(player.stamina)}%`;
     ui.staminaBar.style.width = `${player.stamina}%`;
+    ui.crowd.textContent = `${difficulty.label}・${difficulty.count}人`;
   }
 
   function roundedRect(x, y, width, height, radius) {
@@ -423,6 +447,9 @@
 
   document.getElementById("startButton").addEventListener("click", startGame);
   document.getElementById("retryButton").addEventListener("click", startGame);
+  document.querySelectorAll("[data-difficulty]").forEach((button) => {
+    button.addEventListener("click", () => setDifficulty(button.dataset.difficulty));
+  });
   ui.sound.addEventListener("click", () => {
     soundOn = !soundOn;
     ui.sound.textContent = soundOn ? "♪" : "×";
