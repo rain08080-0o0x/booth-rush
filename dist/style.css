@@ -1,0 +1,200 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+JP:wght@500;700;900&display=swap");
+
+:root {
+  color-scheme: dark;
+  --ink: #f7f4ff;
+  --muted: #a9a2c7;
+  --panel: #18122e;
+  --line: rgba(255, 255, 255, 0.13);
+  --cyan: #51f6e0;
+  --yellow: #f9ea62;
+  --pink: #ff5aa5;
+  --violet: #7b61ff;
+}
+
+* { box-sizing: border-box; }
+
+html, body { min-height: 100%; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 18% 8%, rgba(123, 97, 255, 0.28), transparent 32rem),
+    radial-gradient(circle at 82% 92%, rgba(255, 90, 165, 0.16), transparent 30rem),
+    #0d091c;
+  font-family: "Noto Sans JP", system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 36px 36px;
+  content: "";
+  mask-image: linear-gradient(to bottom, black, transparent 80%);
+}
+
+button { font: inherit; }
+
+.game-shell {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 26px 0 20px;
+}
+
+.topbar, .hud, footer { display: flex; align-items: center; }
+.topbar { justify-content: space-between; margin-bottom: 16px; }
+.brand__eyebrow, .hud-card span, footer { font-family: "IBM Plex Mono", monospace; }
+.brand__eyebrow { color: var(--cyan); font-size: .69rem; letter-spacing: .22em; }
+.brand h1 { margin: 2px 0 0; font-size: clamp(1.25rem, 3vw, 2rem); line-height: 1; letter-spacing: -.06em; }
+.brand h1 em { color: var(--yellow); font-family: "IBM Plex Mono", monospace; font-style: normal; letter-spacing: -.04em; }
+
+.icon-button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--cyan);
+  background: rgba(255,255,255,.04);
+  cursor: pointer;
+}
+.icon-button:hover { border-color: var(--cyan); background: rgba(81,246,224,.1); }
+
+.hud { gap: 10px; margin-bottom: 10px; }
+.hud-card {
+  height: 62px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(24, 18, 46, .88);
+  box-shadow: 0 12px 30px rgba(0,0,0,.18);
+}
+.hud-card--time { width: 116px; border-left: 3px solid var(--pink); }
+.hud-card--goal { flex: 1.2; }
+.hud-card--stamina { flex: 1; }
+.hud-card > span { display: block; color: var(--pink); font-size: .62rem; letter-spacing: .18em; }
+.hud-card strong { font-family: "IBM Plex Mono", monospace; font-size: 1.35rem; line-height: 1.2; }
+.hud-row { display: flex; align-items: baseline; justify-content: space-between; }
+.hud-row span { color: var(--muted); font-size: .67rem; letter-spacing: .08em; }
+.hud-row strong { font-size: .82rem; }
+.progress { height: 7px; margin-top: 8px; overflow: hidden; border-radius: 10px; background: rgba(255,255,255,.08); }
+.progress span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--violet), var(--pink)); transition: width .12s linear; }
+.progress--stamina span { width: 100%; background: linear-gradient(90deg, var(--cyan), var(--yellow)); }
+
+.stage-wrap {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 16px;
+  background: #171129;
+  box-shadow: 0 28px 80px rgba(0,0,0,.48), 0 0 0 6px rgba(255,255,255,.025);
+}
+
+#gameCanvas { display: block; width: 100%; height: auto; aspect-ratio: 900/560; touch-action: none; }
+.scanlines { pointer-events: none; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, transparent 0 3px, rgba(0,0,0,.055) 4px); mix-blend-mode: multiply; }
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  opacity: 0;
+  visibility: hidden;
+  background: rgba(10,7,25,.68);
+  backdrop-filter: blur(6px);
+  transition: opacity .25s ease, visibility .25s;
+}
+.overlay.is-visible { opacity: 1; visibility: visible; }
+.panel {
+  width: min(470px, 100%);
+  padding: clamp(22px, 4vw, 38px);
+  border: 1px solid rgba(255,255,255,.19);
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(32,23,61,.98), rgba(17,12,36,.98));
+  box-shadow: 0 24px 80px rgba(0,0,0,.58), inset 0 1px rgba(255,255,255,.08);
+  text-align: center;
+}
+.panel__kicker { margin: 0 0 8px; color: var(--cyan); font: 600 .72rem/1 "IBM Plex Mono", monospace; letter-spacing: .2em; }
+.panel h2 { margin: 0; font-size: clamp(1.8rem, 5vw, 3.2rem); line-height: 1.08; letter-spacing: -.06em; }
+.panel h2 span { color: var(--yellow); }
+.panel__copy { margin: 16px auto 20px; color: #c9c4db; font-size: .88rem; line-height: 1.85; }
+.accent { color: var(--pink); font: 600 .8rem/1 "IBM Plex Mono", monospace; }
+.howto { display: flex; justify-content: center; gap: 12px; margin-bottom: 22px; }
+.howto div { display: grid; gap: 6px; }
+.howto kbd { min-width: 116px; padding: 10px 12px; border: 1px solid rgba(255,255,255,.16); border-bottom-width: 3px; border-radius: 7px; background: rgba(255,255,255,.06); font: 600 .77rem/1 "IBM Plex Mono", monospace; }
+.howto span { color: var(--muted); font-size: .68rem; }
+.primary-button {
+  width: 100%;
+  padding: 15px 20px;
+  border: 0;
+  border-radius: 8px;
+  color: #161126;
+  background: var(--yellow);
+  box-shadow: 0 6px 0 #a99c2d;
+  font-weight: 900;
+  cursor: pointer;
+  transform: translateY(0);
+  transition: transform .12s, box-shadow .12s, filter .12s;
+}
+.primary-button:hover { filter: brightness(1.08); transform: translateY(-2px); box-shadow: 0 8px 0 #a99c2d; }
+.primary-button:active { transform: translateY(5px); box-shadow: 0 1px 0 #a99c2d; }
+.primary-button span { float: right; font-family: "IBM Plex Mono", monospace; }
+.panel__note { margin: 14px 0 0; color: #77708f; font: 500 .62rem/1 "IBM Plex Mono", monospace; }
+.panel--result { width: min(400px, 100%); }
+.result-score { margin: 18px 0 0; color: var(--yellow); font: 600 3.6rem/1 "IBM Plex Mono", monospace; }
+.result-score small { display: block; margin-top: 8px; color: var(--muted); font-size: .7rem; letter-spacing: .12em; }
+
+.mobile-controls { display: none; justify-content: space-between; align-items: center; margin-top: 16px; }
+.dpad { display: grid; grid-template: repeat(2, 52px) / repeat(3, 52px); gap: 6px; }
+.dpad button, .push-button { border: 1px solid rgba(255,255,255,.17); color: var(--ink); background: rgba(255,255,255,.07); touch-action: none; user-select: none; }
+.dpad button { border-radius: 9px; }
+.dpad button:nth-child(1) { grid-column: 2; }
+.dpad button:nth-child(2) { grid-row: 2; grid-column: 1; }
+.dpad button:nth-child(3) { grid-row: 2; grid-column: 2; }
+.dpad button:nth-child(4) { grid-row: 2; grid-column: 3; }
+.dpad button.is-held, .push-button.is-held { border-color: var(--cyan); background: rgba(81,246,224,.2); transform: scale(.96); }
+.push-button { width: 108px; height: 108px; border: 2px solid var(--yellow); border-radius: 50%; box-shadow: inset 0 0 0 5px rgba(249,234,98,.08); }
+.push-button span, .push-button small { display: block; }
+.push-button span { color: var(--yellow); font: 600 1rem/1 "IBM Plex Mono", monospace; }
+.push-button small { margin-top: 6px; color: var(--muted); font-size: .65rem; }
+
+footer { justify-content: space-between; gap: 20px; padding: 16px 4px 0; color: #706a86; font-size: .62rem; letter-spacing: .04em; }
+
+@media (max-width: 720px), (pointer: coarse) {
+  .game-shell { width: min(100% - 18px, 700px); padding-top: 14px; }
+  .hud { gap: 6px; }
+  .hud-card { height: 56px; padding: 8px 9px; }
+  .hud-card--time { width: 88px; }
+  .hud-card--goal { flex: 1; }
+  .hud-card--stamina { flex: 1; }
+  .hud-card strong { font-size: 1rem; }
+  .hud-row strong { font-size: .67rem; }
+  .hud-row span { font-size: .58rem; }
+  .progress { margin-top: 7px; }
+  .mobile-controls { display: flex; }
+  footer span:last-child { display: none; }
+  .panel { padding: 22px; }
+}
+
+@media (max-width: 480px) {
+  .brand__eyebrow { font-size: .58rem; }
+  .brand h1 { font-size: 1.08rem; }
+  .hud-card--stamina .hud-row span { font-size: 0; }
+  .hud-card--stamina .hud-row span::after { content: "PUSH"; font-size: .58rem; }
+  .overlay { align-items: center; padding: 12px; }
+  .panel__copy { font-size: .76rem; margin: 12px 0 14px; }
+  .howto { margin-bottom: 16px; }
+  .howto kbd { min-width: 96px; padding: 8px; }
+  .panel__note { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#100b24" />
+    <meta
+      name="description"
+      content="人混みの隙間を見つけ、45秒以内に目的のブースへ押し進むミニゲーム。"
+    />
+    <title>押し進め！BOOTH RUSH</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand__eyebrow">EVENT HALL 03</span>
+          <h1>押し進め！<em>BOOTH RUSH</em></h1>
+        </div>
+        <button class="icon-button" id="soundButton" type="button" aria-label="サウンドをオフにする">♪</button>
+      </header>
+
+      <section class="hud" aria-label="ゲーム情報">
+        <div class="hud-card hud-card--time">
+          <span>TIME</span>
+          <strong id="timeValue">45.0</strong>
+        </div>
+        <div class="hud-card hud-card--goal">
+          <div class="hud-row"><span>目的地まで</span><strong id="distanceValue">85m</strong></div>
+          <div class="progress"><span id="progressBar"></span></div>
+        </div>
+        <div class="hud-card hud-card--stamina">
+          <div class="hud-row"><span>PUSH</span><strong id="staminaValue">100%</strong></div>
+          <div class="progress progress--stamina"><span id="staminaBar"></span></div>
+        </div>
+      </section>
+
+      <section class="stage-wrap">
+        <canvas id="gameCanvas" width="900" height="560" aria-label="イベント会場を進むゲーム画面"></canvas>
+        <div class="scanlines" aria-hidden="true"></div>
+
+        <div class="overlay is-visible" id="startOverlay">
+          <div class="panel">
+            <p class="panel__kicker">MISSION 01</p>
+            <h2>限定グッズが<br /><span>売り切れる前に。</span></h2>
+            <p class="panel__copy">人の流れを読み、隙間を縫って右奥の<span class="accent">TARGET BOOTH</span>へ。ぶつかりそうなら一気に押し進め！</p>
+            <div class="howto">
+              <div><kbd>WASD</kbd><span>移動</span></div>
+              <div><kbd>SPACE</kbd><span>押し進む</span></div>
+            </div>
+            <button class="primary-button" id="startButton" type="button">会場へ突入 <span>→</span></button>
+            <p class="panel__note">45秒で決着・スマホ操作対応</p>
+          </div>
+        </div>
+
+        <div class="overlay" id="resultOverlay" aria-live="polite">
+          <div class="panel panel--result">
+            <p class="panel__kicker" id="resultKicker">MISSION CLEAR</p>
+            <h2 id="resultTitle">たどり着いた！</h2>
+            <p class="result-score"><span id="resultScore">12.4</span><small>秒残し</small></p>
+            <p class="panel__copy" id="resultMessage">人波の切れ目を見逃さない、見事な押し進みでした。</p>
+            <button class="primary-button" id="retryButton" type="button">もう一度挑戦 <span>↻</span></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="mobile-controls" aria-label="タッチ操作">
+        <div class="dpad">
+          <button data-key="up" type="button" aria-label="上へ移動">▲</button>
+          <button data-key="left" type="button" aria-label="左へ移動">◀</button>
+          <button data-key="down" type="button" aria-label="下へ移動">▼</button>
+          <button data-key="right" type="button" aria-label="右へ移動">▶</button>
+        </div>
+        <button class="push-button" data-key="push" type="button"><span>PUSH</span><small>押し進む</small></button>
+      </section>
+
+      <footer>
+        <span>押し合いはゲームの中だけ。会場では譲り合って楽しもう。</span>
+        <span>NO DOWNLOAD / PLAY IN BROWSER</span>
+      </footer>
+    </main>
+    <script src="./game.js"></script>
+  </body>
+</html>
